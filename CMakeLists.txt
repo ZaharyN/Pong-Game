@@ -1,11 +1,9 @@
 cmake_minimum_required(VERSION 3.20)
 project(PongGame)
 
-# Use C++ 20
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# 1. Fetch SFML 3.0 automatically
 include(FetchContent)
 FetchContent_Declare(
     SFML
@@ -14,10 +12,9 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(SFML)
 
-# 2. Tell CMake where your code is
-add_executable(PongGame src/main.cpp)
+add_executable(PongGame src/main.cpp "include/Paddle.h" "src/Paddle.cpp")
+target_include_directories(PongGame PUBLIC "${PROJECT_SOURCE_DIR}/include")
 
-# 3. Link SFML
 target_link_libraries(PongGame sfml-graphics sfml-window sfml-audio sfml-system)
 
 # 4. Handle Assets (Copies them to where the EXE is so the game can find them)
