@@ -18,9 +18,9 @@ protected:
 	int horizontalDirection;
 
 public:
-	Paddle(const sf::Vector2f& size,const PaddleScreenPosition screenPos, const sf::Vector2f& startPosition, const sf::Color& initialColor, const float& speed);
+	Paddle(const sf::Vector2f& size,const PaddleScreenPosition screenPos, const sf::Vector2f& startPosition, const sf::Color& initialColor, float speed);
 
-	virtual void Update(const float& deltaT) = 0;
+	virtual void Update(float deltaT) = 0;
 
 	virtual void Draw(sf::RenderTarget& target);
 

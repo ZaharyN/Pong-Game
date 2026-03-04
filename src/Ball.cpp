@@ -1,8 +1,8 @@
 #include "Ball.h"
 
-Ball::Ball(const float& initialRadius, const sf::Vector2f& initialPosition,
-	const float& initialSpeed, const int& minAngle,
-	const int& maxAngle, const sf::Color& color)
+Ball::Ball(float initialRadius, const sf::Vector2f& initialPosition,
+	float initialSpeed, int minAngle,
+	int maxAngle, const sf::Color& color)
 	:initialRadius(initialRadius), initialMovementSpeed(initialSpeed),
 	currentMovementSpeed(initialMovementSpeed), currentRadius(initialRadius),
 	initialMinAngle(minAngle), initialMaxAngle(maxAngle), color(color)
@@ -15,7 +15,7 @@ Ball::Ball(const float& initialRadius, const sf::Vector2f& initialPosition,
 	ResetAngle();
 }
 
-void Ball::Update(const float& deltaT)
+void Ball::Update(float deltaT)
 {
 	float ballX = body.getPosition().x;
 	float ballY = body.getPosition().y;
@@ -57,12 +57,12 @@ void Ball::SetPosition(const sf::Vector2f& newPosition)
 	body.setPosition(newPosition);
 }
 
-const float& Ball::GetCurrentSpeed() const
+float Ball::GetCurrentSpeed() const
 {
 	return this->currentMovementSpeed;
 }
 
-const float& Ball::GetCurrentRadius() const
+float Ball::GetCurrentRadius() const
 {
 	return this->currentRadius;
 }
@@ -89,7 +89,7 @@ void Ball::ResetAngle()
 	verticalDirection = sin(startingAngle.asRadians());
 }
 
-sf::Angle Ball::GenerateRandomStartingAngle(const int& min, const int& max) const
+sf::Angle Ball::GenerateRandomStartingAngle(int min, int max) const
 {
 	std::random_device rd;
 	std::mt19937 mt(rd());

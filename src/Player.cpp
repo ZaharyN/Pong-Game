@@ -1,7 +1,7 @@
 #include "Player.h"
 #include <iostream>
 
-void Player::Update(const float& deltaT)
+void Player::Update(float deltaT)
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::Left)
 		|| sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::A))

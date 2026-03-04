@@ -22,11 +22,11 @@ class Ball
 	float verticalDirection;
 
 public:
-	Ball(const float& initialRadius, const sf::Vector2f& initialPosition,
-		const float& initialSpeed, const int& minAngle,
-		const int& maxAngle, const sf::Color& color);
+	Ball(float initialRadius, const sf::Vector2f& initialPosition,
+		float initialSpeed, int minAngle,
+		int maxAngle, const sf::Color& color);
 
-	void Update(const float& deltaT);
+	void Update(float deltaT);
 
 	void Draw(sf::RenderTarget& target);
 
@@ -40,9 +40,9 @@ public:
 
 	void SetPosition(const sf::Vector2f& newPosition);
 
-	const float& GetCurrentSpeed() const;
+	float GetCurrentSpeed() const;
 
-	const float& GetCurrentRadius() const;
+	float GetCurrentRadius() const;
 
 	const sf::CircleShape& GetBody() const;
 
@@ -54,5 +54,6 @@ public:
 
 private:
 	void ResetAngle();
-	sf::Angle GenerateRandomStartingAngle(const int& min, const int& max) const;
+
+	sf::Angle GenerateRandomStartingAngle(int min, int max) const;
 };

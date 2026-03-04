@@ -7,7 +7,7 @@ Enemy::Enemy(const sf::Vector2f& size, const PaddleScreenPosition screenPos, con
 	horizontalDirection = 1;
 }
 
-void Enemy::Update(const float& deltaT)
+void Enemy::Update(float deltaT)
 {
 	float currentStep = currentSpeed * deltaT;
 	float distance = ball.GetBody().getPosition().x - body.getPosition().x;

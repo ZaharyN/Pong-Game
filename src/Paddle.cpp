@@ -1,7 +1,7 @@
 #include "Paddle.h"
 
 Paddle::Paddle(const sf::Vector2f& size, const PaddleScreenPosition screenPos, const sf::Vector2f& startPosition,
-	const sf::Color& initialColor, const float& speed)
+	const sf::Color& initialColor, float speed)
 	: initialSpeed(speed), currentSpeed(speed), horizontalDirection(0), screenPosition(screenPos)
 {
 	body = sf::RectangleShape(size);

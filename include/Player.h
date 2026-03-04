@@ -4,5 +4,5 @@
 class Player : public Paddle
 {
 public:
-	void Update(const float& deltaT) override;
+	void Update(float deltaT) override;
 };
