@@ -50,7 +50,18 @@ void Ball::SwapVerticalDirection()
 
 void Ball::IncreaseSpeed()
 {
-	currentMovementSpeed += currentMovementSpeed * speedMultiplier;
+	currentMovementSpeed += currentMovementSpeed * SPEED_MULTIPLIER;
+}
+
+void Ball::ApplySpin(float paddleXDirection)
+{
+	horizontalDirection += paddleXDirection * INFLUENCE;
+	verticalDirection *= -1;
+
+	float length = sqrt(pow(horizontalDirection, 2) + pow(verticalDirection, 2));
+
+	horizontalDirection /= length;
+	verticalDirection /= length;
 }
 
 void Ball::SetPosition(const sf::Vector2f& newPosition)

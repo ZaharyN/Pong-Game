@@ -36,6 +36,11 @@ const float Paddle::GetInitialSpeed() const
 	return this->initialSpeed;
 }
 
+int Paddle::GetXDirection() const
+{
+	return this->horizontalDirection;
+}
+
 const sf::RectangleShape& Paddle::GetBody() const
 {
 	return this->body;

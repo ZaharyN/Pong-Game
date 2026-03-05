@@ -164,7 +164,7 @@ void GameManager::CheckCollisions()
 		if (ball->GetGlobalBounds().findIntersection(player1->GetGlobalBounds()))
 		{
 			ball->SetPosition({ ball->GetBody().getPosition().x, player1->GetBody().getPosition().y - (ballRadius + playerHeight / 2) });
-			ball->SwapVerticalDirection();
+			ball->ApplySpin(player1->GetXDirection());
 			ball->IncreaseSpeed();
 
 			audioManager->PlaySound("hit");
@@ -173,7 +173,7 @@ void GameManager::CheckCollisions()
 		else if (ball->GetGlobalBounds().findIntersection(player2->GetGlobalBounds()))
 		{
 			ball->SetPosition({ ball->GetBody().getPosition().x, player2->GetBody().getPosition().y + (ballRadius + playerHeight / 2) });
-			ball->SwapVerticalDirection();
+			ball->ApplySpin(player2->GetXDirection());
 			ball->IncreaseSpeed();
 
 			audioManager->PlaySound("hit");

@@ -5,11 +5,13 @@
 
 class Ball
 {
+	const float INFLUENCE = 0.3f;
+	const float SPEED_MULTIPLIER = 0.01f;
+
 	sf::CircleShape body;
 	sf::Color color;
 	std::mt19937 rng;
 
-	const float speedMultiplier = 0.01f;
 	const float initialMovementSpeed;
 	float currentMovementSpeed;
 
@@ -38,6 +40,8 @@ public:
 	void SwapVerticalDirection();
 
 	void IncreaseSpeed();
+
+	void ApplySpin(float paddleXDirection);
 
 	void SetPosition(const sf::Vector2f& newPosition);
 
