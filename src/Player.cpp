@@ -10,6 +10,8 @@ Player::Player(const sf::Vector2f& size, const PaddleScreenPosition screenPos, c
 
 void Player::Update(float deltaT)
 {
+	horizontalDirection = 0;
+
 	if (sf::Keyboard::isKeyPressed(controls.leftPrimary)
 		|| sf::Keyboard::isKeyPressed(controls.leftSecondary))
 	{

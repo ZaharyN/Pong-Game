@@ -7,6 +7,7 @@ class Ball
 {
 	sf::CircleShape body;
 	sf::Color color;
+	std::mt19937 rng;
 
 	const float speedMultiplier = 0.01f;
 	const float initialMovementSpeed;
@@ -34,7 +35,7 @@ public:
 
 	void SwapHorizontalDirection();
 
-	void SwapVerticalDireciton();
+	void SwapVerticalDirection();
 
 	void IncreaseSpeed();
 
@@ -42,18 +43,20 @@ public:
 
 	float GetCurrentSpeed() const;
 
+	float GetInitialSpeed() const;
+
 	float GetCurrentRadius() const;
 
 	const sf::CircleShape& GetBody() const;
 
-	const sf::FloatRect& GetGlobalBounds() const;
+	sf::FloatRect GetGlobalBounds() const;
 
-	const sf::FloatRect& GetLocalBounds() const;
+	sf::FloatRect GetLocalBounds() const;
 
 	~Ball() = default;
 
 private:
 	void ResetAngle();
 
-	sf::Angle GenerateRandomStartingAngle(int min, int max) const;
+	sf::Angle GenerateRandomStartingAngle(int min, int max);
 };

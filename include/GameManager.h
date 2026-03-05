@@ -5,6 +5,7 @@
 #include "UIManager.h"
 #include "Types.h"
 #include "Player.h"
+#include "Enemy.h"
 #include <memory>
 
 class GameManager

@@ -76,10 +76,10 @@ void UIManager::Render(GameState state, sf::RenderWindow& gameWindow)
 
 void UIManager::InitializeSelectModeMenu()
 {
-	onePlayerGameButton = sf::RectangleShape({ BUTTON_WIDTH, BUTTON_HEIGHT });
+	onePlayerGameButton = sf::RectangleShape({ BUTTON_WIDTH * 2, BUTTON_HEIGHT });
 	CreateButton(onePlayerGameButton, 200);
 
-	twoPlayerGameButton = sf::RectangleShape({ BUTTON_WIDTH, BUTTON_HEIGHT });
+	twoPlayerGameButton = sf::RectangleShape({ BUTTON_WIDTH * 2, BUTTON_HEIGHT });
 	CreateButton(twoPlayerGameButton, onePlayerGameButton.getPosition().y + BUTTON_HEIGHT / 2.0 + 100);
 
 	CreateButtonText(onePlayerButtonText, "ONE PLAYER GAME", 40, onePlayerGameButton);
@@ -103,7 +103,7 @@ void UIManager::CreateButtonText(std::optional<sf::Text>& text, const std::strin
 	text->setFillColor(sf::Color::White);
 
 	sf::FloatRect localBounds = text->getLocalBounds();
-	text->setOrigin({ localBounds.size.x / 2.f, localBounds.size.y / 2.f });
+	text->setOrigin({ localBounds.size.x / 2, localBounds.size.y});
 	text->setPosition(parent.getPosition());
 }
 

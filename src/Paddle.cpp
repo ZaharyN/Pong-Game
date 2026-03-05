@@ -40,3 +40,8 @@ const sf::RectangleShape& Paddle::GetBody() const
 {
 	return this->body;
 }
+
+sf::FloatRect Paddle::GetGlobalBounds() const
+{
+	return this->body.getGlobalBounds();
+}

@@ -5,6 +5,7 @@
 
 class AudioManager
 {
+	const float DAMPING_FACTOR = 0.3f;
 	std::unordered_map<std::string, sf::SoundBuffer> buffers;
 	std::optional<sf::Sound> sound;
 	sf::Music backgroundMusic;
@@ -16,5 +17,7 @@ public:
 
 	void PlayBackgroundMusic();
 
-	void SetBackgroundMusicPitch(float pitch);
+	void SetPitch(float speedRatio);
+
+	void StopBackgroundMusic();
 };

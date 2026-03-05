@@ -34,10 +34,17 @@ void AudioManager::PlaySound(const std::string_view& soundName)
 void AudioManager::PlayBackgroundMusic()
 {
 	backgroundMusic.setLooping(true);
+	backgroundMusic.setPitch(1.f);
 	backgroundMusic.play();
 }
 
-void AudioManager::SetBackgroundMusicPitch(float pitch)
+void AudioManager::SetPitch(float speedRation)
 {
-	backgroundMusic.setPitch(pitch);
+	float newPitch = 1.f + (speedRation - 1.0) * DAMPING_FACTOR;
+	backgroundMusic.setPitch(newPitch);
+}
+
+void AudioManager::StopBackgroundMusic()
+{
+	backgroundMusic.stop();
 }

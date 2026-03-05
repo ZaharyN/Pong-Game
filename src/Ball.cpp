@@ -5,7 +5,7 @@ Ball::Ball(float initialRadius, const sf::Vector2f& initialPosition,
 	int maxAngle, const sf::Color& color)
 	:initialRadius(initialRadius), initialMovementSpeed(initialSpeed),
 	currentMovementSpeed(initialMovementSpeed), currentRadius(initialRadius),
-	initialMinAngle(minAngle), initialMaxAngle(maxAngle), color(color)
+	initialMinAngle(minAngle), initialMaxAngle(maxAngle), color(color), rng(std::random_device{}())
 {
 	body = sf::CircleShape(initialRadius);
 	body.setOrigin(body.getGeometricCenter());
@@ -22,6 +22,7 @@ void Ball::Update(float deltaT)
 	float ballNewX = ballX + deltaT * currentMovementSpeed * horizontalDirection;
 	float ballNewY = ballY + deltaT * currentMovementSpeed * verticalDirection;
 
+	std::cout << "Ball position: (X = " << ballNewX << ", Y = " << ballNewY << ")" << std::endl;
 	SetPosition({ ballNewX, ballNewY });
 }
 
@@ -42,7 +43,7 @@ void Ball::SwapHorizontalDirection()
 	horizontalDirection *= -1;
 }
 
-void Ball::SwapVerticalDireciton()
+void Ball::SwapVerticalDirection()
 {
 	verticalDirection *= -1;
 }
@@ -62,6 +63,11 @@ float Ball::GetCurrentSpeed() const
 	return this->currentMovementSpeed;
 }
 
+float Ball::GetInitialSpeed() const
+{
+	return this->initialMovementSpeed;
+}
+
 float Ball::GetCurrentRadius() const
 {
 	return this->currentRadius;
@@ -72,12 +78,12 @@ const sf::CircleShape& Ball::GetBody() const
 	return this->body;
 }
 
-const sf::FloatRect& Ball::GetGlobalBounds() const
+sf::FloatRect Ball::GetGlobalBounds() const
 {
 	return this->body.getGlobalBounds();
 }
 
-const sf::FloatRect& Ball::GetLocalBounds() const
+sf::FloatRect Ball::GetLocalBounds() const
 {
 	return this->body.getLocalBounds();
 }
@@ -89,13 +95,11 @@ void Ball::ResetAngle()
 	verticalDirection = sin(startingAngle.asRadians());
 }
 
-sf::Angle Ball::GenerateRandomStartingAngle(int min, int max) const
+sf::Angle Ball::GenerateRandomStartingAngle(int min, int max)
 {
-	std::random_device rd;
-	std::mt19937 mt(rd());
 	std::uniform_int_distribution random(min, max);
 
-	int randomAngle = random(mt);
+	int randomAngle = random(rng);
 	sf::Angle angle = sf::degrees(randomAngle);
 
 	return angle;

@@ -32,4 +32,6 @@ public:
 	const float GetInitialSpeed() const;
 
 	const sf::RectangleShape& GetBody() const;
+
+	sf::FloatRect GetGlobalBounds() const;
 };
