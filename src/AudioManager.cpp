@@ -14,6 +14,12 @@ AudioManager::AudioManager()
 		buffers["hit"] = std::move(hitBuffer);
 	}
 
+	sf::SoundBuffer energyPickUpBuffer;
+	if (energyPickUpBuffer.loadFromFile("Assets/Audio/energy_picked.ogg"))
+	{
+		buffers["energy_picked"] = std::move(energyPickUpBuffer);
+	}
+
 	if (!backgroundMusic.openFromFile("Assets/Audio/background.mp3"))
 	{
 		std::cout << "Error: Could not find background music in Assets/Audio folder!" << std::endl;

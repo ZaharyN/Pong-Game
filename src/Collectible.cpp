@@ -1,21 +1,20 @@
 #include "Collectible.h"
 
-Collectible::Collectible(const sf::Vector2f& screenPos, float width, 
-	float height, const sf::Color& color)
-	: position(screenPos), width(width), height(height)
+Collectible::Collectible(const sf::Vector2f& screenPos, const sf::Texture& texture,
+	float width, float height, const sf::Color& color)
+	: position(screenPos), width(width), height(height), sprite(texture)
 {
-	body = sf::RectangleShape(sf::Vector2f{ width, height });
-	body.setOrigin(body.getGeometricCenter());
-	body.setPosition(screenPos);
-	body.setFillColor(color);
+	sf::FloatRect bounds = sprite.getLocalBounds();
+	sprite.setOrigin({ bounds.size.x / 2.f, bounds.size.y / 2.f });
+	sprite.setPosition(screenPos);
 }
 
 sf::FloatRect Collectible::GetBounds() const
 {
-	return this->body.getGlobalBounds();
+	return this->sprite.getGlobalBounds();
 }
 
 void Collectible::Draw(sf::RenderTarget& window)
 {
-	window.draw(body);
+	window.draw(sprite);
 }

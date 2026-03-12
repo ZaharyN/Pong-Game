@@ -2,6 +2,7 @@
 #include "SFML/Graphics.hpp"
 #include "Collectible.h"
 #include "Types.h"
+#include "AudioManager.h"
 #include "Paddle.h"
 #include <vector>
 #include <memory>
@@ -21,12 +22,14 @@ class CollectibleManager
 	int gameScreenWidth;
 	int gameScreenHeight;
 
+	sf::Texture energyTexture;
+
 	std::vector<std::unique_ptr<Collectible>> collectibles;
 
 public:
 	CollectibleManager(int windowWidth, int windowHeight);
 	void Update(float deltaT, Paddle* player1, Paddle* player2);
-	void CheckCollisions(Paddle* player1, Paddle* player2);
+	void CheckCollisions(Paddle* player1, Paddle* player2, AudioManager& audioManager);
 	void Draw(sf::RenderTarget& window);
 	const std::vector<std::unique_ptr<Collectible>>& GetCollectibles() const;
 

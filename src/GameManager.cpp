@@ -202,7 +202,7 @@ void GameManager::CheckCollisions()
 			return;
 		}
 
-		collectibleManager->CheckCollisions(player1.get(), player2.get());
+		collectibleManager->CheckCollisions(player1.get(), player2.get(), *audioManager);
 	}
 }
 

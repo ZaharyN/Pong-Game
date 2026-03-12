@@ -5,7 +5,10 @@ CollectibleManager::CollectibleManager(int windowWidth, int windowHeight)
 	spawnDelay(COLLECTIBLE_SPAWN_DELAY), spawnTimer(0.f),
 	rng(std::random_device{}())
 {
-	std::cout << "CollectibleManagaer initialized " << std::endl;
+	if (!energyTexture.loadFromFile("Assets/Textures/energy.png"))
+	{
+		std::cout << "EnergyTexture could not be loaded" << std::endl;
+	}
 }
 
 void CollectibleManager::Update(float deltaT, Paddle* player1, Paddle* player2)
@@ -23,24 +26,25 @@ void CollectibleManager::Update(float deltaT, Paddle* player1, Paddle* player2)
 	}
 }
 
-void CollectibleManager::CheckCollisions(Paddle* player1, Paddle* player2)
+void CollectibleManager::CheckCollisions(Paddle* player1, Paddle* player2, AudioManager& audioManager)
 {
 	std::erase_if(collectibles, [&](const std::unique_ptr<Collectible>& c)
 		{
 			if (player1->GetGlobalBounds().findIntersection(c->GetBounds()))
 			{
 				player1->ReduceEnergy(-COLLECTIBLE_ENERGY);
-				std::cout << "Player1 collectible removed " << std::endl;
+				audioManager.PlaySound("energy_picked");
 				return true;
 			}
 			if (player2->GetGlobalBounds().findIntersection(c->GetBounds()))
 			{
 				player2->ReduceEnergy(-COLLECTIBLE_ENERGY);
-				std::cout << "Player2 collectible removed " << std::endl;
+				audioManager.PlaySound("energy_picked");
 				return true;
 			}
 			return false;
-		});
+		}
+	);
 }
 
 void CollectibleManager::Draw(sf::RenderTarget& window)
@@ -90,14 +94,10 @@ void CollectibleManager::SpawnCollectible(PaddleScreenPosition screenPos, Paddle
 
 	std::unique_ptr<Collectible> collectible = std::make_unique<Collectible>(
 		sf::Vector2f{ x,y },
+		energyTexture,
 		COLLECTIBLE_WIDTH,
 		COLLECTIBLE_HEIGHT,
 		sf::Color::Green);
 
 	collectibles.push_back(std::move(collectible));
 }
-
-//const sf::Vector2f CollectibleManager::GenerateRandomPos()
-//{
-//
-//}

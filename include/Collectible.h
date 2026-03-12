@@ -3,14 +3,14 @@
 
 class Collectible
 {
-	sf::RectangleShape body;
+	sf::Sprite sprite;
 	sf::Vector2f position;
 
 	float width;
 	float height;
 
 public:
-	Collectible(const sf::Vector2f& screenPos, float width, float height, const sf::Color& color);
+	Collectible(const sf::Vector2f& screenPos, const sf::Texture& texture, float width, float height, const sf::Color& color);
 
 	void Draw(sf::RenderTarget& gameWindow);
 	sf::FloatRect GetBounds() const;
