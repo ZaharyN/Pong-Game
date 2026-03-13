@@ -1,7 +1,7 @@
 #include "UIManager.h"
 
-UIManager::UIManager(const unsigned int windowWidth)
-	: windowWidth(windowWidth)
+UIManager::UIManager(const unsigned int windowWidth, const unsigned int windowHeight)
+	: windowWidth(windowWidth), windowHeight(windowHeight)
 {
 	if (!font.openFromFile("Assets/Fonts/game_font.ttf"))
 	{
@@ -9,6 +9,7 @@ UIManager::UIManager(const unsigned int windowWidth)
 	}
 	InitializeStartMenu();
 	InitializeSelectModeMenu();
+	InitializeUpgradeMenu();
 }
 
 void UIManager::InitializeStartMenu()
@@ -21,6 +22,49 @@ void UIManager::InitializeStartMenu()
 
 	CreateButtonText(startButtonText, "START GAME", 40, startButton);
 	CreateButtonText(exitButtonText, "EXIT", 40, exitButton);
+}
+
+void UIManager::InitializeSelectModeMenu()
+{
+	onePlayerGameButton = sf::RectangleShape({ BUTTON_WIDTH * 2, BUTTON_HEIGHT });
+	CreateButton(onePlayerGameButton, 200);
+
+	twoPlayerGameButton = sf::RectangleShape({ BUTTON_WIDTH * 2, BUTTON_HEIGHT });
+	CreateButton(twoPlayerGameButton, onePlayerGameButton.getPosition().y + BUTTON_HEIGHT / 2.0 + 100);
+
+	CreateButtonText(onePlayerButtonText, "ONE PLAYER GAME", 40, onePlayerGameButton);
+	CreateButtonText(twoPlayerButtonText, "TWO PLAYER GAME", 40, twoPlayerGameButton);
+}
+
+void UIManager::InitializeUpgradeMenu()
+{
+	upgradeCard1 = sf::RectangleShape({ UPGRADE_CARD_WIDTH, UPGRADE_CARD_HEIGHT });
+	upgradeCard2 = sf::RectangleShape({ UPGRADE_CARD_WIDTH, UPGRADE_CARD_HEIGHT });
+	upgradeCard3 = sf::RectangleShape({ UPGRADE_CARD_WIDTH, UPGRADE_CARD_HEIGHT });
+	sf::RectangleShape* cards[] = { &upgradeCard1, &upgradeCard2, &upgradeCard3 };
+
+	card1Title = sf::RectangleShape({ UPGRADE_CARD_WIDTH, 60 });
+	card2Title = sf::RectangleShape({ UPGRADE_CARD_WIDTH, 60 });
+	card3Title = sf::RectangleShape({ UPGRADE_CARD_WIDTH, 60 });
+	sf::RectangleShape* titles[] = { &card1Title, &card2Title, &card3Title };
+
+	float posY = windowHeight / 2;
+
+	for (int i = 0; i < 3; i++)
+	{
+		float posX = 0 + (i + 1) * UPGRADE_CARD_GAP + i * UPGRADE_CARD_WIDTH + UPGRADE_CARD_WIDTH / 2.f;
+
+		cards[i]->setOrigin(cards[i]->getGeometricCenter());
+		cards[i]->setPosition({ posX, posY });
+		cards[i]->setFillColor(sf::Color::Black);
+		cards[i]->setOutlineThickness(OUTLINE_THICKNESS);
+
+		titles[i]->setOrigin(titles[i]->getGeometricCenter());
+		titles[i]->setPosition({ posX, posY - UPGRADE_CARD_HEIGHT / 2 + titles[i]->getGlobalBounds().size.y / 2});
+		titles[i]->setFillColor(sf::Color::White);
+	}
+
+	std::cout << "Upgrade menu initialized" << std::endl;
 }
 
 void UIManager::Update(GameState state, const sf::RenderWindow& gameWindow)
@@ -52,9 +96,13 @@ void UIManager::Update(GameState state, const sf::RenderWindow& gameWindow)
 		else
 			ResetHoverEffect(twoPlayerGameButton, twoPlayerButtonText);
 	}
+	else if (state == GameState::UpgradeSelect)
+	{
+
+	}
 }
 
-void UIManager::Render(GameState state, sf::RenderWindow& gameWindow)
+void UIManager::Draw(GameState state, sf::RenderWindow& gameWindow)
 {
 	if (state == GameState::Menu)
 	{
@@ -72,26 +120,61 @@ void UIManager::Render(GameState state, sf::RenderWindow& gameWindow)
 		gameWindow.draw(*onePlayerButtonText);
 		gameWindow.draw(*twoPlayerButtonText);
 	}
+	else if (state == GameState::UpgradeSelect)
+	{
+		gameWindow.draw(upgradeCard1);
+		gameWindow.draw(card1Title);
+		gameWindow.draw(*card1TitleText);
+		gameWindow.draw(*card1DescriptionText);
+
+		gameWindow.draw(upgradeCard2);
+		gameWindow.draw(card2Title);
+		gameWindow.draw(*card2TitleText);
+		gameWindow.draw(*card2DescriptionText);
+
+		gameWindow.draw(upgradeCard3);
+		gameWindow.draw(card3Title);
+		gameWindow.draw(*card3TitleText);
+		gameWindow.draw(*card3DescriptionText);
+	}
 }
 
 void UIManager::ShowRandomUpgrades(const std::vector<Upgrade>& upgrades)
 {
-	for (size_t i = 0; i < upgrades.size(); i++)
-	{
+	std::optional<sf::Text>* titleTexts[] = { &card1TitleText, &card2TitleText, &card3TitleText };
+	std::optional<sf::Text>* descriptionTexts[] = { &card1DescriptionText, &card2DescriptionText, &card3DescriptionText };
+	sf::RectangleShape* cards[] = { &upgradeCard1, &upgradeCard2, &upgradeCard3 };
+	sf::RectangleShape* titles[] = { &card1Title, &card2Title, &card3Title };
 
+	for (int i = 0; i < 3; i++)
+	{
+		sf::Color rarityColor = GetColorFromRarity(upgrades[i].rarity);
+		cards[i]->setOutlineColor(rarityColor);
+
+		// Set title texts
+		titleTexts[i]->emplace(font, upgrades[i].title, 40);
+		(*titleTexts[i])->setFillColor(sf::Color::Black);
+		sf::FloatRect tBounds = (*titleTexts[i])->getLocalBounds();
+		(*titleTexts[i])->setOrigin({ tBounds.size.x / 2, tBounds.size.y });
+		(*titleTexts[i])->setPosition(titles[i]->getPosition());
+
+		// Set description texts
+		std::string wrapped = WrapText(upgrades[i].description, UPGRADE_CARD_WIDTH - 20.f, 20);
+		descriptionTexts[i]->emplace(font, wrapped, 20);
+		(*descriptionTexts[i])->setFillColor(sf::Color::White);
+		sf::FloatRect dBounds = (*descriptionTexts[i])->getGlobalBounds();
+		(*descriptionTexts[i])->setOrigin({ dBounds.size.x / 2, dBounds.size.y });
+		(*descriptionTexts[i])->setPosition({ cards[i]->getPosition().x, cards[i]->getPosition().y });
 	}
 }
 
-void UIManager::InitializeSelectModeMenu()
+int UIManager::GetClickedCardIndex(const sf::Vector2f& mousePos) const
 {
-	onePlayerGameButton = sf::RectangleShape({ BUTTON_WIDTH * 2, BUTTON_HEIGHT });
-	CreateButton(onePlayerGameButton, 200);
+	if (upgradeCard1.getGlobalBounds().contains(mousePos)) return 0;
+	if (upgradeCard2.getGlobalBounds().contains(mousePos)) return 1;
+	if (upgradeCard3.getGlobalBounds().contains(mousePos)) return 2;
 
-	twoPlayerGameButton = sf::RectangleShape({ BUTTON_WIDTH * 2, BUTTON_HEIGHT });
-	CreateButton(twoPlayerGameButton, onePlayerGameButton.getPosition().y + BUTTON_HEIGHT / 2.0 + 100);
-
-	CreateButtonText(onePlayerButtonText, "ONE PLAYER GAME", 40, onePlayerGameButton);
-	CreateButtonText(twoPlayerButtonText, "TWO PLAYER GAME", 40, twoPlayerGameButton);
+	return -1;
 }
 
 void UIManager::CreateButton(sf::RectangleShape& button, float yPosition)
@@ -106,12 +189,12 @@ void UIManager::CreateButton(sf::RectangleShape& button, float yPosition)
 void UIManager::CreateButtonText(std::optional<sf::Text>& text, const std::string& value, int size, const sf::RectangleShape& parent)
 {
 	text.emplace(font);
-	text->setString(std::string(value));
+	text->setString(value);
 	text->setCharacterSize(size);
 	text->setFillColor(sf::Color::White);
 
 	sf::FloatRect localBounds = text->getLocalBounds();
-	text->setOrigin({ localBounds.size.x / 2, localBounds.size.y});
+	text->setOrigin({ localBounds.size.x / 2, localBounds.size.y });
 	text->setPosition(parent.getPosition());
 }
 
@@ -127,4 +210,23 @@ void UIManager::ResetHoverEffect(sf::RectangleShape& button, std::optional<sf::T
 	button.setFillColor(sf::Color::Black);
 	text->setFillColor(sf::Color::White);
 	button.setScale({ 1.0f, 1.0f });
+}
+
+sf::Color UIManager::GetColorFromRarity(UpgradeRarity rarity)
+{
+	switch (rarity)
+	{
+	case UpgradeRarity::Common:
+		return sf::Color::White;
+	case UpgradeRarity::Uncommon:
+		return sf::Color::Blue;
+	case UpgradeRarity::Legendary:
+		return sf::Color::Yellow;
+	}
+	return sf::Color::White;
+}
+
+std::string UIManager::WrapText(const std::string& str, float maxWidth, unsigned int fontSize)
+{
+	return "PLACEHOLDER TEXT";
 }

@@ -33,13 +33,17 @@ void CollectibleManager::CheckCollisions(Paddle* player1, Paddle* player2, Audio
 			if (player1->GetGlobalBounds().findIntersection(c->GetBounds()))
 			{
 				player1->ReduceEnergy(-COLLECTIBLE_ENERGY);
+				player1->CollectEnergy();
 				audioManager.PlaySound("energy_picked");
+
 				return true;
 			}
 			if (player2->GetGlobalBounds().findIntersection(c->GetBounds()))
 			{
+				player2->CollectEnergy();
 				player2->ReduceEnergy(-COLLECTIBLE_ENERGY);
 				audioManager.PlaySound("energy_picked");
+
 				return true;
 			}
 			return false;

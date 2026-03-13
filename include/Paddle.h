@@ -15,13 +15,13 @@ protected:
 	int currentEnergy;
 	int horizontalDirection;
 	int windowWidth;
-
+	int energyCollected;
 	// Modifiables:
 	float reducedCollectibleSpawnRange = 0.f;
 	float force = 1.0f;
 
 public:
-	Paddle(const sf::Vector2f& size,const PaddleScreenPosition screenPos, const sf::Vector2f& startPosition, 
+	Paddle(const sf::Vector2f& size, const PaddleScreenPosition screenPos, const sf::Vector2f& startPosition, 
 		const sf::Color& initialColor, float speed, int windowWidth, int initialEnergy);
 
 	virtual void Update(float deltaT) = 0;
@@ -33,6 +33,8 @@ public:
 	void SetPosition(const sf::Vector2f& newPosition);
 
 	void ReduceEnergy(int energyTaken);
+
+	void CollectEnergy();
 
 	void ChangeColorFromRation(float ratio);
 
@@ -47,6 +49,10 @@ public:
 	const sf::RectangleShape& GetBody() const;
 
 	const PaddleScreenPosition GetScreenPosition() const;
+
+	const int GetCollectedEnergy() const;
+
+	void ResetCollectedEnergy();
 
 	sf::FloatRect GetGlobalBounds() const;
 

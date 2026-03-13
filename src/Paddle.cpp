@@ -3,7 +3,8 @@
 Paddle::Paddle(const sf::Vector2f& size, const PaddleScreenPosition screenPos, const sf::Vector2f& startPosition,
 	const sf::Color& initialColor, float speed, int windowWidth, int initialEnergy)
 	: initialSpeed(speed), currentSpeed(speed), horizontalDirection(0), screenPosition(screenPos), 
-	  windowWidth(windowWidth), initialEnergy(initialEnergy), currentEnergy(initialEnergy), color(initialColor)
+	  windowWidth(windowWidth), initialEnergy(initialEnergy), currentEnergy(initialEnergy), 
+	  color(initialColor), energyCollected(0)
 {
 	body = sf::RectangleShape(size);
 	body.setOrigin(body.getGeometricCenter());
@@ -59,6 +60,26 @@ void Paddle::ChangeColorFromRation(float ratio)
 	body.setFillColor(sf::Color(static_cast<uint8_t>(redValue), static_cast<uint8_t>(greenValue), color.b));
 }
 
+void Paddle::CollectEnergy()
+{
+	this->energyCollected++;
+}
+
+void Paddle::ResetCollectedEnergy()
+{
+	this->energyCollected = 0;
+}
+
+void Paddle::SetSpeed(float factor)
+{
+
+}
+
+void Paddle::SetSize(float factor)
+{
+
+}
+
 const float Paddle::GetCurrentSpeed() const
 {
 	return this->currentSpeed;
@@ -77,6 +98,11 @@ int Paddle::GetXDirection() const
 const sf::RectangleShape& Paddle::GetBody() const
 {
 	return this->body;
+}
+
+const int Paddle::GetCollectedEnergy() const
+{
+	return this->energyCollected;
 }
 
 sf::FloatRect Paddle::GetGlobalBounds() const

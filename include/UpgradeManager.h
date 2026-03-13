@@ -1,5 +1,6 @@
 #pragma once
 #include "Types.h"
+#include "Paddle.h"
 #include <vector>
 #include <random>
 

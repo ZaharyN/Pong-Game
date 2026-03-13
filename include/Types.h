@@ -2,8 +2,9 @@
 #include <string>
 #include <SFML/Window/Keyboard.hpp>
 #include <functional>
-#include <Ball.h>
-#include <Paddle.h>
+
+class Ball;
+class Paddle;
 
 enum class GameState
 {

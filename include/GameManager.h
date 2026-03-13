@@ -4,6 +4,7 @@
 #include "AudioManager.h"
 #include "UIManager.h"
 #include "CollectibleManager.h"
+#include "UpgradeManager.h"
 #include "Types.h"
 #include "Player.h"
 #include "Enemy.h"
@@ -32,10 +33,15 @@ class GameManager
 	std::unique_ptr<AudioManager> audioManager;
 	std::unique_ptr<UIManager> uiManager;
 	std::unique_ptr<CollectibleManager> collectibleManager;
+	std::unique_ptr<UpgradeManager> upgradeManager;
 
 	std::unique_ptr<Ball> ball;
 	std::unique_ptr<Paddle> player1;
 	std::unique_ptr<Paddle> player2;
+
+	Paddle* upgradeRecipient = nullptr;
+	Paddle* upgradeVictim = nullptr;
+	std::vector<Upgrade> currentUpgradeOptions;
 
 	void ProcessEvents();
 	void Update(float deltaT);

@@ -7,8 +7,11 @@ GameManager::GameManager()
 	gameWindow.setFramerateLimit(60);
 
 	audioManager = std::make_unique<AudioManager>();
-	uiManager = std::make_unique<UIManager>(windowWidth);
+	uiManager = std::make_unique<UIManager>(windowWidth, windowHeight);
 	collectibleManager = std::make_unique<CollectibleManager>(windowWidth, windowHeight);
+	upgradeManager = std::make_unique<UpgradeManager>();
+
+	currentUpgradeOptions.reserve(3);
 }
 
 void GameManager::Run()
@@ -78,6 +81,16 @@ void GameManager::ProcessEvents()
 						audioManager->PlayBackgroundMusic();
 
 						StartGame(GameMode::TwoPlayer);
+					}
+				}
+				else if (gameState == GameState::UpgradeSelect)
+				{
+					int pickedCard = uiManager->GetClickedCardIndex(mouseWorldPos);
+
+					if (pickedCard != -1)
+					{
+						currentUpgradeOptions[pickedCard].action(*upgradeRecipient, *upgradeVictim, *ball);
+						gameState = GameState::Playing;
 					}
 				}
 			}
@@ -203,6 +216,29 @@ void GameManager::CheckCollisions()
 		}
 
 		collectibleManager->CheckCollisions(player1.get(), player2.get(), *audioManager);
+
+		if (player1->GetCollectedEnergy() == 5)
+		{
+			player1->ResetCollectedEnergy();
+			upgradeRecipient = player1.get();
+			upgradeVictim = player2.get();
+
+			currentUpgradeOptions = upgradeManager->ChooseThreeRandomUpgrades();
+			uiManager->ShowRandomUpgrades(currentUpgradeOptions);
+
+			gameState = GameState::UpgradeSelect;
+		}
+		else if (player2->GetCollectedEnergy() == 5)
+		{
+			player2->ResetCollectedEnergy();
+			upgradeRecipient = player2.get();
+			upgradeVictim = player1.get();
+
+			currentUpgradeOptions = upgradeManager->ChooseThreeRandomUpgrades();
+			uiManager->ShowRandomUpgrades(currentUpgradeOptions);
+
+			gameState = GameState::UpgradeSelect;
+		}
 	}
 }
 
@@ -219,7 +255,7 @@ void GameManager::Render()
 	}
 	else
 	{
-		uiManager->Render(gameState, gameWindow);
+		uiManager->Draw(gameState, gameWindow);
 	}
 
 	gameWindow.display();
