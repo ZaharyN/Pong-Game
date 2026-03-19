@@ -62,6 +62,14 @@ void CollectibleManager::Draw(sf::RenderTarget& window)
 	}
 }
 
+void CollectibleManager::Reset()
+{
+	spawnDelay = COLLECTIBLE_SPAWN_DELAY;
+	spawnTimer = 0.0f;
+
+	collectibles.clear();
+}
+
 const std::vector<std::unique_ptr<Collectible>>& CollectibleManager::GetCollectibles() const
 {
 	return collectibles;

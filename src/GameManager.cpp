@@ -208,7 +208,7 @@ void GameManager::CheckCollisions()
 			player1->Reset();
 			player2->Reset();
 			ball->Reset();
-
+			collectibleManager->Reset();
 			audioManager->StopBackgroundMusic();
 
 			gameState = GameState::Menu;

@@ -32,6 +32,7 @@ public:
 	void CheckCollisions(Paddle* player1, Paddle* player2, AudioManager& audioManager);
 	void Draw(sf::RenderTarget& window);
 	const std::vector<std::unique_ptr<Collectible>>& GetCollectibles() const;
+	void Reset();
 
 private:
 	void SpawnCollectible(PaddleScreenPosition screenPos, Paddle* player);
