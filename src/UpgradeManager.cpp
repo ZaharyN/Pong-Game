@@ -50,159 +50,192 @@ void UpgradeManager::LoadUpgradesData()
 	// Common upgrades:
 
 	allUpgrades.push_back({
+		UpgradeType::Sonic,
 		"SONIC",
 		"INCREASSE SPEED BY 10%",
 		UpgradeRarity::Common,
+		false,
 		[](Paddle& p, Paddle& opp, Ball& ball)
 		{
+			p.AddUpgrade(UpgradeType::Sonic, false);
 			p.SetSpeed(1.1f);
 		} });
 
 	allUpgrades.push_back({
+		UpgradeType::Snail,
 		"SNAIL",
 		"OPPONENT'S SPEED IS REDUCED BY 10%",
 		UpgradeRarity::Common,
+		false,
 		[](Paddle& p, Paddle& opp, Ball& ball)
 		{
+			opp.AddUpgrade(UpgradeType::Snail, false);
 			opp.SetSpeed(0.9f);
 		} });
 
 	allUpgrades.push_back({
+		UpgradeType::Goliath,
 		"GOLIATH",
 		"INCREASE PADDLE WIDTH BY 10%",
 		UpgradeRarity::Common,
+		false,
 		[](Paddle& p, Paddle& opp, Ball& ball)
 		{
+			p.AddUpgrade(UpgradeType::Goliath, false);
 			p.SetSize(1.1f);
 		} });
 
 	allUpgrades.push_back({
+		UpgradeType::Midget,
 		"MIDGET",
 		"OPPONENT'S PADDLE WIDTH IS REDUCED BY 10%",
 		UpgradeRarity::Common,
+		false,
 		[](Paddle& p, Paddle& opp, Ball& ball)
 		{
+			opp.AddUpgrade(UpgradeType::Midget, false);
 			opp.SetSize(0.9f);
 		} });
 
 	allUpgrades.push_back({
+		UpgradeType::MoreSpin,
 		"MORE SPIN",
 		"YOUR HITS APPLY 50% MORE SPIN TO THE BALL",
 		UpgradeRarity::Common,
+		false,
 		[](Paddle& p, Paddle& opp, Ball& ball)
 		{
+			p.AddUpgrade(UpgradeType::MoreSpin, false);
 			p.SetSpin(0.5f);
 		} });
 
 	allUpgrades.push_back({
+		UpgradeType::LessSpin,
 		"LESS SPIN",
 		"ENEMIES' HITS APPLY 50% LESS SPIN TO THE BALL",
 		UpgradeRarity::Common,
+		false,
 		[](Paddle& p, Paddle& opp, Ball& ball)
 		{
+			opp.AddUpgrade(UpgradeType::LessSpin, false);
 			opp.SetSpin(-0.5f);
 		} });
 
 	allUpgrades.push_back({
+		UpgradeType::Near,
 		"NEAR",
 		"SPAWN ENERGY RANGE IS REDUCED",
 		UpgradeRarity::Common,
+		false,
 		[](Paddle& p, Paddle& opp, Ball& ball)
 		{
+			p.AddUpgrade(UpgradeType::Near, false);
 			p.ModifyEnergySpawnRange(-50.f);
 		} });
 
 	allUpgrades.push_back({
+		UpgradeType::Far,
 		"FAR",
 		"OPPONENT'S SPAWN ENERGY RANGE IS INCREASED",
 		UpgradeRarity::Common,
+		false,
 		[](Paddle& p, Paddle& opp, Ball& ball)
 		{
+			opp.AddUpgrade(UpgradeType::Far, false);
 			opp.ModifyEnergySpawnRange(+50.f);
 		} });
 
 	// Uncommon upgrades:
 
 	allUpgrades.push_back({
+		UpgradeType::Dash,
 		"DASH",
 		"PRESS SPACE TO APPLY THE DASH",
 		UpgradeRarity::Uncommon,
+		true,
 		[](Paddle& p, Paddle& opp, Ball& ball)
 		{
+			p.AddUpgrade(UpgradeType::Dash, true);
 			p.EnableDash();
 		} });
 
 	allUpgrades.push_back({
+		UpgradeType::Obstacles,
 		"OBSTACLES",
 		"OBSTACLE IS PLACED IN OPPONENTS FIELD",
 		UpgradeRarity::Uncommon,
+		false,
 		[](Paddle& p, Paddle& opp, Ball& ball)
 		{
-
+			opp.PlaceObstacle(50.f, 10.f);
+			opp.AddUpgrade(UpgradeType::Obstacles, false);
 		} });
 
 	allUpgrades.push_back({
+		UpgradeType::SMSMissing,
 		"SM'S MISSING",
 		"MAKE A WHOLE IN OPPONENTS BODY",
 		UpgradeRarity::Uncommon,
+		true,
 		[](Paddle& p, Paddle& opp, Ball& ball)
 		{
-
+			opp.AddUpgrade(UpgradeType::SMSMissing, true);
 		} });
 
 	allUpgrades.push_back({
+		UpgradeType::Sping,
 		"SPING",
 		"YOUR HITS APPLY CURVATURE TO THE BALL",
 		UpgradeRarity::Uncommon,
+		false,
 		[](Paddle& p, Paddle& opp, Ball& ball)
 		{
-
+			p.AddUpgrade(UpgradeType::Sping, false);
 		} });
 
 	allUpgrades.push_back({
+		UpgradeType::Foresight,
 		"FORESIGHT",
 		"YOU SEE THE BALL TRAJECTORY",
 		UpgradeRarity::Uncommon,
+		false,
 		[](Paddle& p, Paddle& opp, Ball& ball)
 		{
-
+			p.AddUpgrade(UpgradeType::Foresight, false);
 		} });
 
 	// Legendary upgrades:
 
 	allUpgrades.push_back({
+		UpgradeType::DumbBuddy,
 		"DUMB BUDDY",
 		"ADD SECOND RECTANGLE WITH DUMMY MOVEMENT",
 		UpgradeRarity::Legendary,
+		true,
 		[](Paddle& p, Paddle& opp, Ball& ball)
 		{
-
+			p.AddUpgrade(UpgradeType::DumbBuddy, true);
 		} });
 
 	allUpgrades.push_back({
-		"DUPLICATION",
-		"SPAWN SECOND BALL ON HIT",
-		UpgradeRarity::Legendary,
-		[](Paddle& p, Paddle& opp, Ball& ball)
-		{
-
-		} });
-
-	allUpgrades.push_back({
-		"DUPLICATION",
+		UpgradeType::Crank,
+		"Crank",
 		"YOU ARE NEVER EXHAUSTED",
 		UpgradeRarity::Legendary,
+		true,
 		[](Paddle& p, Paddle& opp, Ball& ball)
 		{
-
+			p.AddUpgrade(UpgradeType::Crank, true);
 		} });
 
 	allUpgrades.push_back({
+		UpgradeType::Extraganza,
 		"EXTRAGANZA",
 		"YOU CAN NOW MOVE UP AND DOWN",
 		UpgradeRarity::Legendary,
+		true,
 		[](Paddle& p, Paddle& opp, Ball& ball)
 		{
-
+			p.AddUpgrade(UpgradeType::Extraganza, true);
 		} });
 }

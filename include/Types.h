@@ -47,6 +47,27 @@ enum class ClickTarget
 	UpgradeCard3,
 };
 
+enum class UpgradeType
+{
+	None,
+	Sonic,
+	Snail,
+	Goliath,
+	Midget,
+	MoreSpin,
+	LessSpin,
+	Near,
+	Far,
+	Dash,
+	Obstacles,
+	SMSMissing,
+	Sping,
+	Foresight,
+	DumbBuddy,
+	Crank,
+	Extraganza
+};
+
 enum class UpgradeRarity
 {
 	Common,
@@ -65,8 +86,10 @@ struct PlayerControls
 
 struct Upgrade
 {
+	UpgradeType type;
 	std::string title;
 	std::string description;
 	UpgradeRarity rarity;
+	bool isUnique;
 	std::function<void(Paddle&, Paddle&, Ball&)> action;
 };
