@@ -11,6 +11,7 @@ Player::Player(const sf::Vector2f& size, const PaddleScreenPosition screenPos, c
 void Player::Update(float deltaT)
 {
 	horizontalDirection = 0;
+	verticalDirection = 0;
 
 	if (dashCooldown > 0) dashCooldown -= deltaT;
 
@@ -31,6 +32,15 @@ void Player::Update(float deltaT)
 	if (sf::Keyboard::isKeyPressed(controls.rightPrimary) || sf::Keyboard::isKeyPressed(controls.rightSecondary))
 		horizontalDirection = 1;
 
+	if (canMoveUpAndDown)
+	{
+		if (sf::Keyboard::isKeyPressed(controls.upPrimary) || sf::Keyboard::isKeyPressed(controls.upSecondary))
+			verticalDirection = -1;
+
+		if (sf::Keyboard::isKeyPressed(controls.downPrimary) || sf::Keyboard::isKeyPressed(controls.downSecondary))
+			verticalDirection = 1;
+	}
+
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::Space))
 	{
 		if (hasDashUpgrade && dashCooldown <= 0 && !isDashing)
@@ -40,8 +50,25 @@ void Player::Update(float deltaT)
 	}
 
 	float speed = currentSpeed * dashSpeedMultiplier;
-	float newPosition = body.getPosition().x + deltaT * horizontalDirection * speed;
+	float newXPosition = body.getPosition().x + deltaT * horizontalDirection * speed;
+	float newYPosition = body.getPosition().y + deltaT * verticalDirection * speed;
 
-	newPosition = std::clamp(newPosition, 0 + body.getSize().x / 2, windowWidth - body.getSize().x / 2);
-	this->SetPosition({ newPosition, body.getPosition().y });
+	float minY;
+	float maxY;
+
+	if (screenPosition == PaddleScreenPosition::Top)
+	{
+		minY = 0 + body.getSize().y / 2.f;
+		maxY = windowHeight / 2.f - body.getSize().y / 2.f;
+	}
+	else
+	{
+		minY = windowHeight / 2.f + body.getSize().y / 2.f;
+		maxY = windowHeight - body.getSize().y / 2.f;
+	}
+
+	newYPosition = std::clamp(newYPosition, minY, maxY);
+	newXPosition = std::clamp(newXPosition, 0 + body.getSize().x / 2, windowWidth - body.getSize().x / 2);
+
+	this->SetPosition({ newXPosition, newYPosition });
 }

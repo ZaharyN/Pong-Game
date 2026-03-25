@@ -82,6 +82,12 @@ struct PlayerControls
 
 	sf::Keyboard::Scancode rightPrimary = sf::Keyboard::Scancode::Unknown;
 	sf::Keyboard::Scancode rightSecondary = sf::Keyboard::Scancode::Unknown;
+
+	sf::Keyboard::Scancode upPrimary = sf::Keyboard::Scancode::Unknown;
+	sf::Keyboard::Scancode upSecondary = sf::Keyboard::Scancode::Unknown;
+
+	sf::Keyboard::Scancode downPrimary = sf::Keyboard::Scancode::Unknown;
+	sf::Keyboard::Scancode downSecondary = sf::Keyboard::Scancode::Unknown;
 };
 
 struct Upgrade

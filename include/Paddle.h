@@ -18,6 +18,7 @@ protected:
 	int initialEnergy;
 	int currentEnergy;
 	int horizontalDirection;
+	int verticalDirection;
 	int windowWidth;
 	int windowHeight;
 	int energyCollected;
@@ -37,6 +38,7 @@ protected:
 	float dashCooldown = 0.f; 
 	float dashSpeedMultiplier = 1.f;
 	bool isNeverExhausted = false;
+	bool canMoveUpAndDown = true;
 
 public:
 	Paddle(const sf::Vector2f& size, const PaddleScreenPosition screenPos, const sf::Vector2f& startPosition, 
@@ -102,4 +104,6 @@ public:
 	void PlaceObstacle(float obstacleWidth, float obstacleHeight);
 
 	void DisableExhaustion();
+
+	void EnableUpAndDownMomvement();
 };

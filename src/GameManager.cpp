@@ -112,7 +112,9 @@ void GameManager::StartGame(GameMode gameMode)
 		p1Controls =
 		{
 			sf::Keyboard::Scancode::Left, sf::Keyboard::Scancode::A,
-			sf::Keyboard::Scancode::Right, sf::Keyboard::Scancode::D
+			sf::Keyboard::Scancode::Right, sf::Keyboard::Scancode::D,
+			sf::Keyboard::Scancode::Up, sf::Keyboard::Scancode::W,
+			sf::Keyboard::Scancode::Down, sf::Keyboard::Scancode::S
 		};
 
 		player2 = std::make_unique<Enemy>(
@@ -126,12 +128,16 @@ void GameManager::StartGame(GameMode gameMode)
 		p1Controls =
 		{
 			sf::Keyboard::Scancode::Left, sf::Keyboard::Scancode::Unknown,
-			sf::Keyboard::Scancode::Right, sf::Keyboard::Scancode::Unknown
+			sf::Keyboard::Scancode::Right, sf::Keyboard::Scancode::Unknown,
+			sf::Keyboard::Scancode::Up, sf::Keyboard::Scancode::Unknown,
+			sf::Keyboard::Scancode::Down, sf::Keyboard::Scancode::Unknown
 		};
 		p2Controls =
 		{
 			sf::Keyboard::Scancode::A, sf::Keyboard::Scancode::Unknown,
-			sf::Keyboard::Scancode::D, sf::Keyboard::Scancode::Unknown
+			sf::Keyboard::Scancode::D, sf::Keyboard::Scancode::Unknown,
+			sf::Keyboard::Scancode::W, sf::Keyboard::Scancode::Unknown,
+			sf::Keyboard::Scancode::S, sf::Keyboard::Scancode::Unknown
 		};
 
 		player2 = std::make_unique<Player>(
@@ -185,9 +191,9 @@ void GameManager::CheckCollisions()
 		}
 
 		// 2.Ricochets from player
-		if (ball->GetGlobalBounds().findIntersection(player1->GetGlobalBounds()))
+		if (ball->GetVerticalDirection() > 0 && ball->GetGlobalBounds().findIntersection(player1->GetGlobalBounds()))
 		{
-			ball->SetPosition({ ball->GetBody().getPosition().x, player1->GetBody().getPosition().y - (ballRadius + playerHeight / 2) });
+			ball->SetPosition({ ball->GetBody().getPosition().x, player1->GetBody().getPosition().y - (ballRadius + playerHeight / 2) - 1 });
 			ball->ApplySpin(player1->GetXDirection(), player1->GetSpinMultiplier());
 			ball->IncreaseSpeed();
 
@@ -196,9 +202,9 @@ void GameManager::CheckCollisions()
 
 			player1->UpdateEnergy(-1);
 		}
-		else if (ball->GetGlobalBounds().findIntersection(player2->GetGlobalBounds()))
+		else if (ball->GetVerticalDirection() < 0 && ball->GetGlobalBounds().findIntersection(player2->GetGlobalBounds()))
 		{
-			ball->SetPosition({ ball->GetBody().getPosition().x, player2->GetBody().getPosition().y + (ballRadius + playerHeight / 2) });
+			ball->SetPosition({ ball->GetBody().getPosition().x, player2->GetBody().getPosition().y + (ballRadius + playerHeight / 2) + 1 });
 			ball->ApplySpin(player2->GetXDirection(), player2->GetSpinMultiplier());
 			ball->IncreaseSpeed();
 
@@ -210,9 +216,9 @@ void GameManager::CheckCollisions()
 
 		// 3. Check obstacle collisions
 		// Check if ball is towards top player
-		if (ball->GetVerticalDirection() == -1)
+		if (ball->GetVerticalDirection() < 0)
 		{
-			for (const auto& obs : player1->GetObstacles())
+			for (const auto& obs : player2->GetObstacles())
 			{
 				if (ball->GetGlobalBounds().findIntersection(obs.getGlobalBounds()))
 				{
@@ -223,9 +229,9 @@ void GameManager::CheckCollisions()
 			}
 		}
 		// Check if ball is towards bottom player
-		if (ball->GetVerticalDirection() == 1)
+		if (ball->GetVerticalDirection() > 0)
 		{
-			for (const auto& obs : player2->GetObstacles())
+			for (const auto& obs : player1->GetObstacles())
 			{
 				if (ball->GetGlobalBounds().findIntersection(obs.getGlobalBounds()))
 				{

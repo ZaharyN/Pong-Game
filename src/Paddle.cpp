@@ -2,7 +2,7 @@
 
 Paddle::Paddle(const sf::Vector2f& size, const PaddleScreenPosition screenPos, const sf::Vector2f& startPosition,
 	const sf::Color& initialColor, float speed, int windowWidth, int windowHeight, int initialEnergy)
-	: initialSpeed(speed), currentSpeed(speed), horizontalDirection(0), screenPosition(screenPos),
+	: initialSpeed(speed), currentSpeed(speed), horizontalDirection(0), verticalDirection(0), screenPosition(screenPos),
 	windowWidth(windowWidth), windowHeight(windowHeight), initialEnergy(initialEnergy), currentEnergy(initialEnergy),
 	color(initialColor), energyCollected(0), rng(std::random_device{}())
 {
@@ -10,6 +10,10 @@ Paddle::Paddle(const sf::Vector2f& size, const PaddleScreenPosition screenPos, c
 	body.setOrigin(body.getGeometricCenter());
 	body.setPosition(startPosition);
 	body.setFillColor(initialColor);
+
+	PlaceObstacle(50.f, 10.f);
+	PlaceObstacle(50.f, 10.f);
+	PlaceObstacle(50.f, 10.f);
 }
 
 void Paddle::Draw(sf::RenderTarget& target)
@@ -50,6 +54,7 @@ void Paddle::Reset()
 	dashCooldown = 0.f;
 	dashSpeedMultiplier = 1.f;
 	isNeverExhausted = false;
+	canMoveUpAndDown = false;
 }
 
 void Paddle::SetPosition(const sf::Vector2f& newPosition)
@@ -175,6 +180,11 @@ void Paddle::PlaceObstacle(float obstacleWidth, float obstacleHeight)
 void Paddle::DisableExhaustion()
 {
 	isNeverExhausted = true;
+}
+
+void Paddle::EnableUpAndDownMomvement()
+{
+	canMoveUpAndDown = true;
 }
 
 const float Paddle::GetCurrentSpeed() const

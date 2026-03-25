@@ -239,6 +239,7 @@ void UpgradeManager::LoadUpgradesData()
 		true,
 		[](Paddle& p, Paddle& opp, Ball& ball)
 		{
+			p.EnableUpAndDownMomvement();
 			p.AddUpgrade(UpgradeType::Extraganza, true);
 		} });
 }
