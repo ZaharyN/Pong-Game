@@ -52,7 +52,7 @@ void UIManager::InitializeUpgradeMenu()
 
 	for (int i = 0; i < 3; i++)
 	{
-		float posX = 0 + (i + 1) * UPGRADE_CARD_GAP + i * UPGRADE_CARD_WIDTH + UPGRADE_CARD_WIDTH / 2.f;
+		float posX = (i + 1) * UPGRADE_CARD_GAP + i * UPGRADE_CARD_WIDTH + UPGRADE_CARD_WIDTH / 2.f;
 
 		cards[i]->setOrigin(cards[i]->getGeometricCenter());
 		cards[i]->setPosition({ posX, posY });

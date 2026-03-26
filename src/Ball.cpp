@@ -5,7 +5,7 @@ Ball::Ball(float initialRadius, const sf::Vector2f& initialPosition,
 	int maxAngle, const sf::Color& color)
 	:initialRadius(initialRadius), initialMovementSpeed(initialSpeed),
 	currentMovementSpeed(initialMovementSpeed), currentRadius(initialRadius),
-	initialMinAngle(minAngle), initialMaxAngle(maxAngle), color(color), 
+	initialMinAngle(minAngle), initialMaxAngle(maxAngle), color(color),
 	rng(std::random_device{}()), colorState(MapColorToState(color))
 {
 	body = sf::CircleShape(initialRadius);
@@ -105,7 +105,7 @@ void Ball::ChangeColor(float deltaT)
 		if (currB >= 255)
 		{
 			currB = 255;
-			colorState = ColorState::Turquoise; 
+			colorState = ColorState::Turquoise;
 		}
 		break;
 
@@ -142,37 +142,42 @@ void Ball::ChangeColor(float deltaT)
 
 float Ball::GetCurrentSpeed() const
 {
-	return this->currentMovementSpeed;
+	return currentMovementSpeed;
 }
 
 float Ball::GetInitialSpeed() const
 {
-	return this->initialMovementSpeed;
+	return initialMovementSpeed;
 }
 
 float Ball::GetCurrentRadius() const
 {
-	return this->currentRadius;
+	return currentRadius;
 }
 
 float Ball::GetVerticalDirection() const
 {
-	return this->verticalDirection;
+	return verticalDirection;
+}
+
+float Ball::GetHorizontalDirection() const
+{
+	return horizontalDirection;
 }
 
 const sf::CircleShape& Ball::GetBody() const
 {
-	return this->body;
+	return body;
 }
 
 sf::FloatRect Ball::GetGlobalBounds() const
 {
-	return this->body.getGlobalBounds();
+	return body.getGlobalBounds();
 }
 
 sf::FloatRect Ball::GetLocalBounds() const
 {
-	return this->body.getLocalBounds();
+	return body.getLocalBounds();
 }
 
 void Ball::ResetAngle()
@@ -196,7 +201,7 @@ ColorState Ball::MapColorToState(const sf::Color& initialColor)
 {
 	if (initialColor.r == 255 && initialColor.g == 255)
 		return ColorState::Yellow;
-	
+
 	if (initialColor.g == 255 && initialColor.b == 255)
 		return ColorState::Turquoise;
 
@@ -211,4 +216,6 @@ ColorState Ball::MapColorToState(const sf::Color& initialColor)
 
 	if (initialColor.b == 255)
 		return ColorState::Blue;
+
+	return ColorState::White;
 }

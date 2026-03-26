@@ -63,6 +63,8 @@ public:
 
 	float GetVerticalDirection() const;
 
+	float GetHorizontalDirection() const;
+
 	const sf::CircleShape& GetBody() const;
 
 	sf::FloatRect GetGlobalBounds() const;

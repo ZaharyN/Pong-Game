@@ -28,6 +28,7 @@ enum class PaddleScreenPosition
 
 enum class ColorState
 {
+	White,
 	Red,
 	Yellow,
 	Green,
@@ -60,7 +61,6 @@ enum class UpgradeType
 	Far,
 	Dash,
 	Obstacles,
-	SMSMissing,
 	Sping,
 	Foresight,
 	DumbBuddy,

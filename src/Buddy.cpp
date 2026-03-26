@@ -17,12 +17,12 @@ void Buddy::Update(float deltaT)
 	float newXPosition = body.getPosition().x + deltaT * horizontalDirection * currentSpeed;
 
 	if (newXPosition >= windowWidth - body.getSize().x / 2.f
-		|| newXPosition <= 0 + body.getSize().x / 2.f)
+		|| newXPosition <= body.getSize().x / 2.f)
 	{
 		horizontalDirection *= -1;
 	}
 
-	newXPosition = std::clamp(newXPosition, 0 + body.getSize().x / 2, windowWidth - body.getSize().x / 2);
+	newXPosition = std::clamp(newXPosition, body.getSize().x / 2, windowWidth - body.getSize().x / 2);
 
 	SetPosition({ newXPosition, body.getPosition().y });
 }

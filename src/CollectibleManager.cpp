@@ -17,7 +17,6 @@ void CollectibleManager::Update(float deltaT, Paddle* player1, Paddle* player2)
 
 	if (spawnTimer >= spawnDelay)
 	{
-		std::cout << "Spawning colelctibles" << std::endl;
 		SpawnCollectible(player1->GetScreenPosition(), player1);
 		SpawnCollectible(player2->GetScreenPosition(), player2);
 
@@ -79,7 +78,7 @@ void CollectibleManager::SpawnCollectible(PaddleScreenPosition screenPos, Paddle
 {
 	float x;
 	float y = screenPos == PaddleScreenPosition::Top
-		? 0 + COLLECTIBLE_HEIGHT / 2
+		? COLLECTIBLE_HEIGHT / 2
 		: gameScreenHeight - COLLECTIBLE_HEIGHT / 2;
 
 	float minX;
@@ -87,12 +86,12 @@ void CollectibleManager::SpawnCollectible(PaddleScreenPosition screenPos, Paddle
 
 	const sf::Vector2f& playerPosition = player->GetBody().getPosition();
 
-	float leftFreeSpace = 0 + playerPosition.x - player->GetBody().getSize().x / 2;
+	float leftFreeSpace = playerPosition.x - player->GetBody().getSize().x / 2;
 	float rightFreeSpace = gameScreenWidth - (playerPosition.x + player->GetBody().getSize().x / 2);
 
 	if (leftFreeSpace >= rightFreeSpace)
 	{
-		minX = 0 + COLLECTIBLE_WIDTH / 2;
+		minX = COLLECTIBLE_WIDTH / 2;
 		maxX = leftFreeSpace - COLLECTIBLE_WIDTH / 2;
 	}
 	else
@@ -109,16 +108,13 @@ void CollectibleManager::SpawnCollectible(PaddleScreenPosition screenPos, Paddle
 	float energyRangeModifier = player->GetEnergySpawnRangeModifier();
 
 	float modifiedX = leftFreeSpace >= rightFreeSpace ? x - energyRangeModifier : x + energyRangeModifier;
-	float clampedX = std::clamp(modifiedX, 0 + COLLECTIBLE_WIDTH / 2, gameScreenWidth - COLLECTIBLE_WIDTH / 2);
+	float clampedX = std::clamp(modifiedX, COLLECTIBLE_WIDTH / 2, gameScreenWidth - COLLECTIBLE_WIDTH / 2);
 
 	std::cout << "Energy spawn location after range modification: " << clampedX << std::endl;
 
 	std::unique_ptr<Collectible> collectible = std::make_unique<Collectible>(
 		sf::Vector2f{ clampedX,y },
-		energyTexture,
-		COLLECTIBLE_WIDTH,
-		COLLECTIBLE_HEIGHT,
-		sf::Color::Green);
+		energyTexture);
 
 	collectibles.push_back(std::move(collectible));
 }
