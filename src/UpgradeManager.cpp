@@ -108,7 +108,7 @@ void UpgradeManager::LoadUpgradesData()
 		[](Paddle& p, Paddle& opp, Ball& ball)
 		{
 			p.AddUpgrade(UpgradeType::MoreSpin, false);
-			p.SetSpin(0.5f);
+			p.SetSpin(1.5f);
 		} });
 
 	allUpgrades.push_back({
@@ -120,7 +120,7 @@ void UpgradeManager::LoadUpgradesData()
 		[](Paddle& p, Paddle& opp, Ball& ball)
 		{
 			opp.AddUpgrade(UpgradeType::LessSpin, false);
-			opp.SetSpin(-0.5f);
+			opp.SetSpin(0.5f);
 		} });
 
 	allUpgrades.push_back({
@@ -189,10 +189,11 @@ void UpgradeManager::LoadUpgradesData()
 		"FORESIGHT",
 		"YOU SEE THE BALL TRAJECTORY",
 		UpgradeRarity::Uncommon,
-		false,
+		true,
 		[](Paddle& p, Paddle& opp, Ball& ball)
 		{
-			p.AddUpgrade(UpgradeType::Foresight, false);
+			p.EnableForesight();
+			p.AddUpgrade(UpgradeType::Foresight, true);
 		} });
 
 	// Legendary upgrades:
@@ -200,7 +201,7 @@ void UpgradeManager::LoadUpgradesData()
 	allUpgrades.push_back({
 		UpgradeType::DumbBuddy,
 		"DUMB BUDDY",
-		"ADD SECOND RECTANGLE WITH DUMMY MOVEMENT",
+		"ADD ONE RECTANGLE WITH DUMMY MOVEMENT",
 		UpgradeRarity::Legendary,
 		false,
 		[](Paddle& p, Paddle& opp, Ball& ball)

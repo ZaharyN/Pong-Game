@@ -1,10 +1,12 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "Types.h"
+#include "Ball.h"
 #include <iostream>
 #include <unordered_set>
 #include <unordered_map>
 #include <vector>
+#include <list>
 #include <random>
 #include <memory>
 
@@ -30,6 +32,8 @@ protected:
 	std::unordered_map<UpgradeType, int> stackableUpgrades;
 	std::vector<sf::RectangleShape> obstacles;
 	std::vector<std::unique_ptr<Paddle>> buddies;
+	std::list<sf::CircleShape> foresightDots;
+
 	float reducedCollectibleSpawnRange = 0.f;
 	float force = 1.0f;
 	float spinMultiplier = 1.0f;
@@ -41,6 +45,7 @@ protected:
 	float dashSpeedMultiplier = 1.f;
 	bool isNeverExhausted = false;
 	bool canMoveUpAndDown = false;
+	bool hasForesight = false;
 
 public:
 	Paddle(const sf::Vector2f& size, const PaddleScreenPosition screenPos, const sf::Vector2f& startPosition, 
@@ -62,17 +67,17 @@ public:
 
 	virtual ~Paddle() = default;
 
-	const float GetCurrentSpeed() const;
+	float GetCurrentSpeed() const;
 
-	const float GetInitialSpeed() const;
+	float GetInitialSpeed() const;
 
 	int GetXDirection() const;
 
 	const sf::RectangleShape& GetBody() const;
 
-	const PaddleScreenPosition GetScreenPosition() const;
+	PaddleScreenPosition GetScreenPosition() const;
 
-	const int GetCollectedEnergy() const;
+	int GetCollectedEnergy() const;
 
 	void ResetCollectedEnergy();
 
@@ -87,6 +92,8 @@ public:
 	const std::unordered_set<UpgradeType>& GetOwnedUniqueUpgrades() const;
 
 	const std::vector<std::unique_ptr<Paddle>>& GetBuddies() const;
+
+	bool HasForesight() const;
 
 	// Modifying methods:
 	void AddUpgrade(UpgradeType type, bool isUnique);
@@ -112,4 +119,12 @@ public:
 	void EnableUpAndDownMomvement();
 
 	void AddBuddy();
+
+	void EnableForesight();
+
+	void ComputeForesight(const Ball& ballRef, int windowWidth, int windowHeight);
+
+	void DrawForesight(sf::RenderTarget& target) const;
+
+	void TrimForesight(float ballY, float verticalDirection);
 };

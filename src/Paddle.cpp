@@ -11,10 +11,6 @@ Paddle::Paddle(const sf::Vector2f& size, const PaddleScreenPosition screenPos, c
 	body.setOrigin(body.getGeometricCenter());
 	body.setPosition(startPosition);
 	body.setFillColor(initialColor);
-
-	PlaceObstacle(50.f, 10.f);
-	PlaceObstacle(50.f, 10.f);
-	PlaceObstacle(50.f, 10.f);
 }
 
 void Paddle::Draw(sf::RenderTarget& target)
@@ -57,6 +53,7 @@ void Paddle::Reset()
 	dashSpeedMultiplier = 1.f;
 	isNeverExhausted = false;
 	canMoveUpAndDown = false;
+	hasForesight = false;
 }
 
 void Paddle::SetPosition(const sf::Vector2f& newPosition)
@@ -68,7 +65,7 @@ void Paddle::UpdateEnergy(int energyTake)
 {
 	if (energyTake < 0 && isNeverExhausted) return;
 
-	currentEnergy = std::clamp(currentEnergy += energyTake, 0, initialEnergy);
+	currentEnergy = std::clamp(currentEnergy + energyTake, 0, initialEnergy);
 
 	std::cout << "Player energy:" << currentEnergy << std::endl;
 	float ratio = (float)currentEnergy / initialEnergy;
@@ -136,7 +133,7 @@ void Paddle::SetSize(float factor)
 	body.setOrigin(body.getGeometricCenter());
 
 	float halfWidth = body.getSize().x / 2;
-	float clampedX = std::clamp(body.getPosition().x, 0 + halfWidth, windowWidth - halfWidth);
+	float clampedX = std::clamp(body.getPosition().x, halfWidth, windowWidth - halfWidth);
 
 	body.setPosition({ clampedX, body.getPosition().y });
 }
@@ -167,7 +164,7 @@ void Paddle::PlaceObstacle(float obstacleWidth, float obstacleHeight)
 {
 	std::uniform_real_distribution<float> random(obstacleWidth / 2.f, windowWidth - obstacleWidth / 2.f);
 	float obstacleX = random(rng);
-	float obstacleY = screenPosition == PaddleScreenPosition::Top 
+	float obstacleY = screenPosition == PaddleScreenPosition::Top
 		? windowHeight / 2.f - obstacleHeight / 2.f - 2.f
 		: windowHeight / 2.f + obstacleHeight / 2.f + 2.f;
 
@@ -211,12 +208,80 @@ void Paddle::AddBuddy()
 	buddies.push_back(std::move(newBuddy));
 }
 
-const float Paddle::GetCurrentSpeed() const
+void Paddle::EnableForesight()
+{
+	hasForesight = true;
+}
+
+void Paddle::ComputeForesight(const Ball& ball, int windowWidth, int windowHeight)
+{
+	foresightDots.clear();
+
+	const float dotSpacing = 30.f;
+	const float dotRadius = 3.f;
+
+	sf::Vector2f direction({ ball.GetHorizontalDirection(), ball.GetVerticalDirection() });
+	sf::Vector2f position(ball.GetBody().getPosition());
+
+	float targetY = direction.y < 0 ? 0 : windowHeight;
+
+	while ((direction.y < 0 && position.y > targetY) || (direction.y > 0 && position.y < targetY))
+	{
+		position.x += direction.x * dotSpacing;
+		position.y += direction.y * dotSpacing;
+
+		if (position.x + ball.GetCurrentRadius() >= windowWidth)
+		{
+			position.x = windowWidth - ball.GetCurrentRadius();
+			direction.x *= -1;
+		}
+		else if (position.x - ball.GetCurrentRadius() <= 0)
+		{
+			position.x = ball.GetCurrentRadius();
+			direction.x *= -1;
+		}
+
+		sf::CircleShape dot(dotRadius);
+		dot.setOrigin(dot.getGeometricCenter());
+		dot.setPosition({ position.x, position.y });
+		dot.setFillColor(sf::Color(255, 255, 255, 120));
+
+		foresightDots.push_back(dot);
+	}
+}
+
+void Paddle::TrimForesight(float ballY, float verticalDirection)
+{
+	while (!foresightDots.empty())
+	{
+		float dotY = foresightDots.front().getPosition().y;
+
+		bool isPassed = verticalDirection > 0
+			? dotY < ballY
+			: dotY > ballY;
+
+		if (!isPassed) break;
+
+		foresightDots.pop_front();
+	}
+}
+
+void Paddle::DrawForesight(sf::RenderTarget& target) const
+{
+	if (foresightDots.size() == 0) return;
+
+	for (const auto& dot : foresightDots)
+		target.draw(dot);
+}
+
+// Getters:
+
+float Paddle::GetCurrentSpeed() const
 {
 	return currentSpeed;
 }
 
-const float Paddle::GetInitialSpeed() const
+float Paddle::GetInitialSpeed() const
 {
 	return initialSpeed;
 }
@@ -231,7 +296,7 @@ const sf::RectangleShape& Paddle::GetBody() const
 	return body;
 }
 
-const int Paddle::GetCollectedEnergy() const
+int Paddle::GetCollectedEnergy() const
 {
 	return energyCollected;
 }
@@ -241,7 +306,7 @@ sf::FloatRect Paddle::GetGlobalBounds() const
 	return body.getGlobalBounds();
 }
 
-const PaddleScreenPosition Paddle::GetScreenPosition() const
+PaddleScreenPosition Paddle::GetScreenPosition() const
 {
 	return screenPosition;
 }
@@ -269,4 +334,9 @@ const std::unordered_set<UpgradeType>& Paddle::GetOwnedUniqueUpgrades() const
 const std::vector<std::unique_ptr<Paddle>>& Paddle::GetBuddies() const
 {
 	return buddies;
+}
+
+bool Paddle::HasForesight() const
+{
+	return hasForesight;
 }

@@ -119,7 +119,7 @@ void GameManager::StartGame(GameMode gameMode)
 
 		player2 = std::make_unique<Enemy>(
 			sf::Vector2f{ playerLength, playerHeight }, PaddleScreenPosition::Top,
-			sf::Vector2f{ windowWidth / 2.f, 0 + playerHeight / 2.f },
+			sf::Vector2f{ windowWidth / 2.f, playerHeight / 2.f },
 			sf::Color::Green,
 			playerSpeed, *ball, windowWidth, windowHeight, 100);
 	}
@@ -142,7 +142,7 @@ void GameManager::StartGame(GameMode gameMode)
 
 		player2 = std::make_unique<Player>(
 			sf::Vector2f{ playerLength, playerHeight }, PaddleScreenPosition::Top,
-			sf::Vector2f{ windowWidth / 2.f, 0 + playerHeight / 2 },
+			sf::Vector2f{ windowWidth / 2.f, playerHeight / 2 },
 			sf::Color::Green,
 			playerSpeed, windowWidth, windowHeight, 100, p2Controls);
 	}
@@ -164,6 +164,11 @@ void GameManager::Update(float deltaT)
 			player1->Update(deltaT);
 			player2->Update(deltaT);
 			collectibleManager->Update(deltaT, player1.get(), player2.get());
+
+			if (player1->HasForesight())
+				player1->TrimForesight(ball->GetBody().getPosition().y, ball->GetVerticalDirection());
+			if (player2->HasForesight())
+				player2->TrimForesight(ball->GetBody().getPosition().y, ball->GetVerticalDirection());
 
 			for (const auto& buddy : player1->GetBuddies())
 				buddy->Update(deltaT);
@@ -191,7 +196,7 @@ void GameManager::CheckCollisions()
 		}
 		else if (ball->GetBody().getPosition().x - ballRadius <= 0)
 		{
-			ball->SetPosition({ 0.f + ballRadius, ball->GetBody().getPosition().y });
+			ball->SetPosition({ ballRadius, ball->GetBody().getPosition().y });
 			ball->SwapHorizontalDirection();
 			audioManager->PlaySound("hit");
 		}
@@ -203,6 +208,9 @@ void GameManager::CheckCollisions()
 			ball->ApplySpin(player1->GetXDirection(), player1->GetSpinMultiplier());
 			ball->IncreaseSpeed();
 
+			if (player2->HasForesight())
+				player2->ComputeForesight(*ball, windowWidth, windowHeight);
+
 			audioManager->PlaySound("hit");
 			audioManager->SetPitch(ball->GetCurrentSpeed() / ball->GetInitialSpeed());
 
@@ -213,6 +221,9 @@ void GameManager::CheckCollisions()
 			ball->SetPosition({ ball->GetBody().getPosition().x, player2->GetBody().getPosition().y + (ballRadius + playerHeight / 2.f) + 1 });
 			ball->ApplySpin(player2->GetXDirection(), player2->GetSpinMultiplier());
 			ball->IncreaseSpeed();
+
+			if (player1->HasForesight())
+				player1->ComputeForesight(*ball, windowWidth, windowHeight);
 
 			audioManager->PlaySound("hit");
 			audioManager->SetPitch(ball->GetCurrentSpeed() / ball->GetInitialSpeed());
@@ -231,6 +242,9 @@ void GameManager::CheckCollisions()
 					ball->SwapVerticalDirection();
 					ball->IncreaseSpeed();
 
+					if (player2->HasForesight())
+						player2->ComputeForesight(*ball, windowWidth, windowHeight);
+
 					audioManager->PlaySound("hit");
 					break;
 				}
@@ -242,9 +256,12 @@ void GameManager::CheckCollisions()
 			{
 				if (buddy->GetGlobalBounds().findIntersection(ball->GetGlobalBounds()))
 				{
-					ball->SetPosition({ ball->GetBody().getPosition().x, player2->GetBody().getPosition().y + (ballRadius + playerHeight / 2.f) + 1 });
+					ball->SetPosition({ ball->GetBody().getPosition().x, buddy->GetBody().getPosition().y + (ballRadius + playerHeight / 2.f) + 1 });
 					ball->SwapVerticalDirection();
 					ball->IncreaseSpeed();
+
+					if (player1->HasForesight())
+						player1->ComputeForesight(*ball, windowWidth, windowHeight);
 
 					audioManager->PlaySound("hit");
 					break;
@@ -330,6 +347,12 @@ void GameManager::Render()
 	{
 		player1->Draw(gameWindow);
 		player2->Draw(gameWindow);
+
+		if (player1->HasForesight())
+			player1->DrawForesight(gameWindow);
+		if (player2->HasForesight())
+			player2->DrawForesight(gameWindow);
+
 		ball->Draw(gameWindow);
 
 		for (const auto& obs : player1->GetObstacles())
